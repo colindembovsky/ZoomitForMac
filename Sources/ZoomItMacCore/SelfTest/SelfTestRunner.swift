@@ -63,6 +63,7 @@ public enum SelfTestRunner {
         try testStandardIconIsRoundedSquareWithMargin()
         try testDefaultTypingFontIsSystem20pt()
         try testStaticZoomStaysAtOneX()
+        try testZoomSaveShortcut()
         try testPanoramaStitching()
         try testPanoramaTopSeamUsesSingleFramePixels()
         try testPanoramaVerticalSeamKeepsSingleFrame()
@@ -434,6 +435,21 @@ public enum SelfTestRunner {
                    "Expected typing entered from static zoom to stay active at 1x like static zoom")
         try expect(ModeCoordinator.exitsOnZoomOutFloor(mode: .typing),
                    "Expected typing to default to the live zoom behavior at the zoom-out floor")
+    }
+
+    private static func testZoomSaveShortcut() throws {
+        try expect(
+            ZoomCanvasView.isSaveShortcut(keyCode: 1, modifierFlags: [.command]),
+            "Expected Command-S to save the zoomed viewport"
+        )
+        try expect(
+            ZoomCanvasView.isSaveShortcut(keyCode: 1, modifierFlags: []) == false,
+            "Expected an unmodified S key not to save the zoomed viewport"
+        )
+        try expect(
+            ZoomCanvasView.isSaveShortcut(keyCode: 1, modifierFlags: [.control]) == false,
+            "Expected Control-S not to be treated as the macOS save shortcut"
+        )
     }
 
     /// The break timer view uses a flipped coordinate system. Drawing a
